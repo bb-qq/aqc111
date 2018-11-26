@@ -1014,6 +1014,8 @@ static int aqc111_bind(struct usbnet *dev, struct usb_interface *intf)
 	dev->net->features |= AQ_SUPPORT_FEATURE;
 	dev->net->vlan_features |= AQ_SUPPORT_VLAN_FEATURE;
 
+	netif_set_gso_max_size(dev->net, 65535);
+
 	aqc111_read_fw_version(dev, aqc111_data);
 	aqc111_data->autoneg = AUTONEG_ENABLE;
 	aqc111_data->advertised_speed = (usb_speed == USB_SPEED_SUPER) ?
