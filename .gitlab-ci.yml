@@ -1,0 +1,124 @@
+stages:
+  - checkpatch
+  - build
+
+.build-only: &build-only
+  only:
+    - /^(dev).*$/
+    - master
+    - web
+  when: always
+
+.checkpatch-full-only: &checkpatch-full-only
+  only:
+    - /^(dev-kernel).*$/
+  when: always
+
+.checkpatch-soft-only: &checkpatch-soft-only
+  only:
+    - /^(dev).*$/
+    - master
+    - web
+  except:
+    - /^(dev-kernel).*$/
+  when: always
+
+checkpatch-full:
+  stage: checkpatch
+  <<: *checkpatch-full-only
+  script:
+    - /usr/src/linux-headers-$(uname -r)/scripts/checkpatch.pl --no-tree -f aqc111.[c,h]
+    
+checkpatch-soft:
+  stage: checkpatch
+  <<: *checkpatch-soft-only
+  script:
+    - /usr/src/linux-headers-$(uname -r)/scripts/checkpatch.pl --no-tree --ignore LINUX_VERSION_CODE -f aqc111.[c,h]
+
+build-project:
+  stage: build
+  <<: *build-only
+  script:
+    - make
+  after_script:
+    - make clean --silent
+
+build-rhel-7.2:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-3.10.0-327.36.3.el7/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-rhel-7.3:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-3.10.0-514.26.2.el7/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-rhel-7.4:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-3.10.0-693.21.1.el7/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-rhel-7.5:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-3.10.0-862.11.6.el7/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-rhel-7.6:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-3.10.0-957.el7.x86_64/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-3.10:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-3.10/linux/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-3.16:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-3.16/linux/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-4.14:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-4.14/linux/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-4.4:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-4.4/linux/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
+
+build-4.9:
+  stage: build
+  <<: *build-only
+  script:
+    - 'make KDIR=/home/gitlab-runner/kernels/linux-4.9/linux/ CC=gcc-4.8'
+  after_script:
+    - make clean --silent
