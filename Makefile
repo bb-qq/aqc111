@@ -1,39 +1,20 @@
-CURRENT	= $(shell uname -r)
-TARGET	= aqc111
-OBJS	= aqc111.o
-MDIR	= drivers/net/usb
+#
+#
+#
 
-ifndef KDIR
-	BUILD_DIR:=/lib/modules/$(shell uname -r)/build
-else
-	BUILD_DIR:=$(KDIR)
-endif
+TARGETS := aqc111.ko usbnet.ko mii.ko
 
-SUBLEVEL= $(shell uname -r | cut -d '.' -f 3 | cut -d '.' -f 1 | cut -d '-' -f 1 | cut -d '_' -f 1)
-USBNET	= $(shell find $(BUILD_DIR)/include/linux/usb/* -name usbnet.h)
+obj-m	 := aqc111.o usbnet.o mii.o
 
-ifneq (,$(filter $(SUBLEVEL),14 15 16 17 18 19 20 21))
-MDIR = drivers/usb/net
-endif
+.PHONY: modules
+$(TARGETS):
+	$(MAKE) -C $(KSRC) M=$(PWD) modules
 
-EXTRA_CFLAGS = -DEXPORT_SYMTAB
-PWD = $(shell pwd)
-DEST = /lib/modules/$(CURRENT)/kernel/$(MDIR)
-
-obj-m      :=  $(TARGET).o  
-
-default:
-	make -C $(BUILD_DIR) SUBDIRS=$(PWD) modules
-
-$(TARGET).o: $(OBJS)
-	$(LD) $(LD_RFLAG) -r -o $@ $(OBJS)
-
-install:
-	cp -v $(TARGET).ko $(DEST) && /sbin/depmod -a
-
+.PHONY: clean
 clean:
-	$(MAKE) -C $(BUILD_DIR) SUBDIRS=$(PWD) clean
+	rm -rf *.o $(TARGET)
 
-.PHONY: modules clean
-
--include $(BUILD_DIR)/Rules.make
+.PHONY: install
+install: $(TARGETS)
+	mkdir -p $(DESTDIR)/aqc111/
+	install $(TARGETS) $(DESTDIR)/aqc111/
