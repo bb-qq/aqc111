@@ -36,5 +36,6 @@ If you want to use the driver on other products, please create a issue.
 Currently I only confirmed that a Japanese product "USB-LAN2500R" works. If you got other products and they do not work, please create a issue with its vendor id.
 
 * [QNAP QNA-UC5G1T](https://amzn.to/2A2aI1e) (Type-A)
+* [TRENDnet TUC-ET5G](https://amzn.to/314DASp) (Type-C)
 
 __Warning: This driver is not confirmed actually working yet.__
