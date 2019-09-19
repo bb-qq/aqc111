@@ -13,7 +13,7 @@ https://www.synology.com/en-us/knowledgebase/SRM/help/SRM/PkgManApp/install_buy
 ## How to configure
 
 1. [Enable SSH](https://www.synology.com/en-us/knowledgebase/DSM/tutorial/General_Setup/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet) and login your NAS
-2. Configure IP address for eth2 interface by "synonet" command, which was created by this driver
+2. Configure IP address for eth2 interface by "synonet" command
 3. Configure IP address again by Web GUI
 
 Note: IP address configuration will be lost after the device is rebooted. If you find a solution for this issue, please share it.
@@ -33,7 +33,7 @@ If you want to use the driver on other products, please create a issue.
 
 ## Supported AQC111U(5.0Gbps) based devices
 
-Currently I only confirmed that a Japanese product "USB-LAN2500R" works. If you got other products and they do not work, please create a issue with its vendor id.
+Currently I only confirmed QNAP QNA-UC5G1T works. If you got other products and they do not work, please create a issue with its vendor id.
 
 * [QNAP QNA-UC5G1T](https://amzn.to/2A2aI1e) (Type-A)
 * [TRENDnet TUC-ET5G](https://amzn.to/314DASp) (Type-C)
@@ -45,7 +45,7 @@ Currently I only confirmed that a Japanese product "USB-LAN2500R" works. If you 
 * direct connection with PC (AQN-107)
 * [native iperf3](http://www.jadahl.com/iperf-arp-scan/DSM_6.2/)
     * using docker causes high CPU load
-* enabled jumbo-frame(9k)
+* enable jumbo-frame(9k)
 
 ### Result
 ````
