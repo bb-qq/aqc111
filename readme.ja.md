@@ -42,7 +42,7 @@ https://www.synology.com/ja-jp/knowledgebase/SRM/help/SRM/PkgManApp/install_buy
 
 ### 環境
 * DS918+ (QNAP QNA-UC5G1T)
-* direct connection with PC (AQN-107)
+* PC との直接接続 (AQN-107)
 * [ネイティブの iperf3](http://www.jadahl.com/iperf-arp-scan/DSM_6.2/)
     * docker を使用すると CPU 負荷が高くなります
 * jumbo-frame(9k) 有効
