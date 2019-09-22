@@ -1,3 +1,5 @@
+[日本語](readme.ja.md)
+
 # DSM driver for Aquantia AQC111U based USB Ethernet adapters
 
 This is a AQC111U driver package for Synology NASes.
