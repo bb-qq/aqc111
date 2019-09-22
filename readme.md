@@ -1,4 +1,4 @@
-[日本語](readme.ja.md)
+[日本語版はこちら](readme.ja.md)
 
 # DSM driver for Aquantia AQC111U based USB Ethernet adapters
 
