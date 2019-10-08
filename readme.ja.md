@@ -13,7 +13,7 @@ https://www.synology.com/ja-jp/knowledgebase/SRM/help/SRM/PkgManApp/install_buy
 ## 設定方法
 
 1. [SSH を有効にする](https://www.synology.com/ja-jp/knowledgebase/DSM/tutorial/General_Setup/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet) and login your NAS
-2. eth2 の IP アドレスを synonet コマンドで設定する
+2. ドライバによって追加されたインタフェース(例: eth2)を有効化する (ifconfig eth2 up)
 3. Web GUI からもう一度設定を行う
 
 注: IP アドレス設定は再起動すると失われてしまいます。何か良い解決方法がありましたら Issue 経由で教えて下さい。
