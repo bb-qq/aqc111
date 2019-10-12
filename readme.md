@@ -20,6 +20,17 @@ https://www.synology.com/en-us/knowledgebase/SRM/help/SRM/PkgManApp/install_buy
 
 Note: IP address configuration will be lost after the device is rebooted. If you find a solution for this issue, please share it.
 
+### Private flags
+
+This driver support additional options. 
+
+* Disable thermal throttling
+    * Link speed is configured to 100Base when the internal chip overheats automatically by default. This option disables that behavior.
+    * ``ethtool --set-priv-flags eth2 "Thermal throttling" off``
+* Enable Low Power 5G
+    * Entering to low heat generation mode at the expense of throughput. This option should be enabled when thermal throttling is disabled.
+    * ``ethtool --set-priv-flags eth2 "Low Power 5G" on``
+
 ## Supported NAS platform
 
 * DSM 6.2
@@ -44,7 +55,7 @@ Currently I only confirmed QNAP QNA-UC5G1T works. If you got other products and 
 
 ### Environment
 * DS918+ (QNAP QNA-UC5G1T)
-* direct connection with PC (AQN-107)
+* direct connection with PC ([AQN-107](https://amzn.to/31arYN8))
 * [native iperf3](http://www.jadahl.com/iperf-arp-scan/DSM_6.2/)
     * using docker causes high CPU load
 * enable jumbo-frame(9k)
