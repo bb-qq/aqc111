@@ -2,13 +2,37 @@
 
 This is a AQC111U driver package for Synology NASes.
 
+## Supported NAS platform
+
+* DSM 6.2
+* apollolake based products
+    * DS918+ (confirmed working)
+    * DS620slim
+    * DS1019+
+    * DS718+
+    * DS418play
+    * DS218+
+
+You can download drivers including other platforms from the [Release page](https://github.com/bb-qq/r8152/releases) and determine a proper driver for your model from [this page](https://www.synology.com/en-global/knowledgebase/DSM/tutorial/Compatibility_Peripherals/What_kind_of_CPU_does_my_NAS_have), but you might encounter some issues with unconfirmed platforms.
+
+I very much appreciate if you report whether it works.
+
+NOTE: I recommend using front ports to connect devices because some users reported stability issues when they use rear ports.
+
+## Supported AQC111U(5.0Gbps) based devices
+
+Currently I only confirmed QNAP QNA-UC5G1T works. If you got other products and they do not work, please create a issue with its vendor id.
+
+* [QNAP QNA-UC5G1T](https://amzn.to/2A2aI1e) (Type-A, confirmed working)
+* [TRENDnet TUC-ET5G](https://amzn.to/314DASp) (Type-C)
+
 ## How to install
 
 ### Preparation
 
 [Enable SSH](https://www.synology.com/en-us/knowledgebase/DSM/tutorial/General_Setup/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet) and login your NAS.
 
-### Instlation
+### Installation
 
 1. Go to "Package Center"
 2. Press "Manual Install"
@@ -33,26 +57,6 @@ This driver support additional options.
 * Enable Low Power 5G
     * Entering to low heat generation mode at the expense of throughput. This option should be enabled when thermal throttling is disabled.
     * ``ethtool --set-priv-flags eth2 "Low Power 5G" on``
-
-## Supported NAS platform
-
-* DSM 6.2, 7.0(experimental)
-* apollolake based products
-    * DS918+ (confirmed working)
-    * DS620slim
-    * DS1019+
-    * DS718+
-    * DS418play
-    * DS218+
-
-If you want to use the driver on other products, please create a issue.
-
-## Supported AQC111U(5.0Gbps) based devices
-
-Currently I only confirmed QNAP QNA-UC5G1T works. If you got other products and they do not work, please create a issue with its vendor id.
-
-* [QNAP QNA-UC5G1T](https://amzn.to/2A2aI1e) (Type-A, confirmed working)
-* [TRENDnet TUC-ET5G](https://amzn.to/314DASp) (Type-C)
 
 ## Performance test
 

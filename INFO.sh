@@ -8,7 +8,6 @@ version="1.3.3.0-3"
 displayname="AQC111 driver"
 maintainer="bb-qq"
 arch="$(pkg_get_platform)"
-description="Driver for Aquantia AQC111U Based USB Ethernet Adapters."
 install_type="package"
 thirdparty="yes"
 
@@ -17,6 +16,7 @@ thirdparty="yes"
 if [ "${PRODUCT_VERSION}" = "7.0" ]; then
     os_min_ver="7.0-40000"
     RUN_AS="package"
+    INSTRUCTION=' [DSM7 note] The installation will fail the first time. See the readme for details.'
 else
     RUN_AS="root"
 fi
@@ -33,5 +33,7 @@ cat <<EOS > `dirname $0`/SynoBuildConf/depends
 [default]
 all="${PRODUCT_VERSION}"
 EOS
+
+description="Driver for Aquantia AQC111U Based USB Ethernet Adapters.${INSTRUCTION}"
 
 pkg_dump_info
