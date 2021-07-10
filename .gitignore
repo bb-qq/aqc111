@@ -9,3 +9,7 @@
 .tmp_versions/
 Module.symvers
 modules.order
+
+# autogen
+SynoBuildConf/depends
+conf/privilege
