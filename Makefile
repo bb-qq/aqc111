@@ -16,12 +16,15 @@ VERSION := $(shell grep Linux/ /usr/local/sysroot/usr/include/linux/syno_autocon
 $(TARGETS):
 	$(MAKE) -C $(KSRC) M=$(PWD) modules
 
+spk_su: spk_su.c
+	$(CC) -std=c99 -o $(@) $(<)
+
 .PHONY: clean
 clean:
-	rm -rf *.o $(TARGET)
+	rm -rf *.o $(TARGET) spk_su
 
 .PHONY: install
-install: $(TARGETS)
+install: $(TARGETS) spk_su
 	mkdir -p $(DESTDIR)/aqc111/
-	install $(TARGETS) $(DESTDIR)/aqc111/
+	install $(^) $(DESTDIR)/aqc111/
 
