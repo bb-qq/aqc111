@@ -1,24 +1,27 @@
-[日本語版はこちら](readme.ja.md)
-
 # DSM driver for Aquantia AQC111U based USB Ethernet adapters
 
 This is a AQC111U driver package for Synology NASes.
 
 ## How to install
 
+### Preparation
+
+[Enable SSH](https://www.synology.com/en-us/knowledgebase/DSM/tutorial/General_Setup/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet) and login your NAS.
+
+### Instlation
+
 1. Go to "Package Center"
 2. Press "Manual Install"
 3. Chose a driver package downloaded from the [release page](https://github.com/bb-qq/aqc111/releases).
+4. [DSM7] The installation will fail the first time. After that, run the following command from the SSH terminal:
+   `sudo install -m 4755 -o root -D /var/packages/aqc111/target/aqc111/spk_su /opt/sbin/spk_su`
+5. [DSM7] Retry installation. (You don't need above DSM7 specific steps at the next time.)
 
 https://www.synology.com/en-us/knowledgebase/SRM/help/SRM/PkgManApp/install_buy
 
 ## How to configure
 
-1. [Enable SSH](https://www.synology.com/en-us/knowledgebase/DSM/tutorial/General_Setup/How_to_login_to_DSM_with_root_permission_via_SSH_Telnet) and login your NAS
-2. Up the interface added by the driver (eg. eth2) by "ifconfig eth2 up"
-3. Configure IP address by Web GUI
-
-Note: IP address configuration will be lost after the device is rebooted. If you find a solution for this issue, please share it.
+You can configure the IP addresses and MTU of the added NICs from the DSM UI in the same way as the built-in NICs.
 
 ### Private flags
 
@@ -33,7 +36,7 @@ This driver support additional options.
 
 ## Supported NAS platform
 
-* DSM 6.2
+* DSM 6.2, 7.0(experimental)
 * apollolake based products
     * DS918+ (confirmed working)
     * DS620slim
