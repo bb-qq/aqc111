@@ -51,7 +51,7 @@ int usbnet_read_cmd_nopm(struct usbnet *dev, u8 cmd, u8 reqtype, u16 value,
 #define usbnet_set_skb_tx_stats(skb, packets, bytes_delta)
 #endif
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 14, 0) && !(RHEL_RELEASE_CODE)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0) && !(RHEL_RELEASE_CODE)
 static inline void ether_addr_copy(u8 *dst, const u8 *src)
 {
 	u16 *a = (u16 *)dst;
