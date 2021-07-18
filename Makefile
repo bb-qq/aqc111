@@ -9,15 +9,18 @@ ccflags-y += -Wno-unused-const-variable
 
 VERSION := $(shell grep Linux/ /usr/local/sysroot/usr/include/linux/syno_autoconf.h | cut -d " " -f 4 | cut -d "." -f 1-2)
 
+.PHONY: all
+all: modules spk_su
+
+.PHONY: modules
+modules: usbnet.c mii.c
+	$(MAKE) -C $(KSRC) M=$(PWD) modules
+
 %.c: 
 	cp $(dir $(@))/linux-$(VERSION)/$(notdir $(@)) $(@)
 
-.PHONY: modules
-$(TARGETS):
-	$(MAKE) -C $(KSRC) M=$(PWD) modules
-
 spk_su: spk_su.c
-	$(CC) -std=c99 -o $(@) $(<)
+	$(CROSS_COMPILE)cc -std=c99 -o $(@) $(<)
 
 .PHONY: clean
 clean:
