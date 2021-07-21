@@ -13,7 +13,7 @@ This is a AQC111U driver package for Synology NASes.
     * DS418play
     * DS218+
 
-You can download drivers including other platforms from the [Release page](https://github.com/bb-qq/r8152/releases) and determine a proper driver for your model from [this page](https://www.synology.com/en-global/knowledgebase/DSM/tutorial/Compatibility_Peripherals/What_kind_of_CPU_does_my_NAS_have), but you might encounter some issues with unconfirmed platforms.
+You can download drivers including other platforms from the [Release page](https://github.com/bb-qq/aqc111/releases) and determine a proper driver for your model from [this page](https://www.synology.com/en-global/knowledgebase/DSM/tutorial/Compatibility_Peripherals/What_kind_of_CPU_does_my_NAS_have), but you might encounter some issues with unconfirmed platforms.
 
 I very much appreciate if you report whether it works.
 
