@@ -91,11 +91,28 @@ set_interfaces()
   done
 }
 
+count_usb_interfaces()
+{
+  ls -l /sys/class/net/ | grep /usb | wc -l
+}
+
 case $1 in
 	start)
+    initial_count=`count_usb_interfaces`
+
 		/sbin/insmod $SYNOPKG_PKGDEST/aqc111/mii.ko
 		/sbin/insmod $SYNOPKG_PKGDEST/aqc111/usbnet.ko
 		/sbin/insmod $SYNOPKG_PKGDEST/aqc111/aqc111.ko
+
+		for i in `seq 1 60`
+		do
+			if [ `count_usb_interfaces` -ne $initial_count ]
+			then
+				break
+			fi
+			sleep 1
+		done
+
 		set_interfaces up
 		exit 0
 	;;
