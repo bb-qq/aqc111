@@ -63,7 +63,7 @@ This driver support additional options.
 ### Environment
 * DS918+ (QNAP QNA-UC5G1T)
 * direct connection with PC ([AQN-107](https://amzn.to/31arYN8))
-* [native iperf3](http://www.jadahl.com/iperf-arp-scan/DSM_6.2/)
+* [native iperf3](http://www.jadahl.com/iperf-arp-scan/)
     * using docker causes high CPU load
 * enable jumbo-frame(9k)
 
