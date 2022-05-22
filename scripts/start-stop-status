@@ -23,71 +23,72 @@ set_interfaces()
   do
     # Skip loopback/docker interface, since it doesn have a device/driver
     # folder.
-      if [[ "$interface_name" = "lo" || "$interface_name" == "docker"* || "$interface_name" == "ovs"* || "$interface_name" == "syno"* || "$interface_name" == "sit"* ]]
+    if [[ "$interface_name" = "lo" || "$interface_name" == "docker"* || "$interface_name" == "ovs"* || "$interface_name" == "syno"* || "$interface_name" == "sit"* ]]
+    then
+      continue
+    fi
+
+    # For all other interfaces list the device driver folder and
+    # bring interface up/down if the device driver folder links to
+    # something with aqc111 in its name.
+    driver_location=$(ls -ld /sys/class/net/$interface_name/device/driver)
+    interface_has_aqc111_driver=false
+    if [ ! -z "$(echo "$driver_location" | grep $driver_name)" ]
+    then
+      interface_has_aqc111_driver=true
+    fi
+    if [ $interface_has_aqc111_driver = true ]
+    then
+      config_file=/etc/sysconfig/network-scripts/ifcfg-$interface_name
+      config_file_ovs=/etc/sysconfig/network-scripts/ifcfg-ovs_$interface_name
+      config_storage_location=$SYNOPKG_PKGDEST/ifcfg-$interface_name
+      config_storage_location_ovs=$SYNOPKG_PKGDEST/ifcfg-ovs_$interface_name
+      if [ -f "$config_file" ] && [ "$action" = "down" ]
       then
-        continue
+        cp $config_file $config_storage_location
+      elif [ "$action" = "up" ] && [ -f "$config_storage_location" ]
+      then
+        cp $config_storage_location $config_file
       fi
-      # For all other interfaces list the device driver folder and
-      # bring interface up/down if the device driver folder links to
-      # something with r8152 in its name.
-      driver_location=$(ls -ld /sys/class/net/$interface_name/device/driver)
-      interface_has_r8152_driver=false
-      if [ ! -z "$(echo "$driver_location" | grep $driver_name)" ]
+      ifconfig $interface_name $action
+      if is_ovs_enable
       then
-        interface_has_r8152_driver=true
-      fi
-      if [ $interface_has_r8152_driver = true ]
-      then
-        config_file=/etc/sysconfig/network-scripts/ifcfg-$interface_name
-        config_file_ovs=/etc/sysconfig/network-scripts/ifcfg-ovs_$interface_name
-        config_storage_location=$SYNOPKG_PKGDEST/ifcfg-$interface_name
-        config_storage_location_ovs=$SYNOPKG_PKGDEST/ifcfg-ovs_$interface_name
-        if [ -f "$config_file" ] && [ "$action" = "down" ]
+        if [ -f "$config_file_ovs" ] && [ "$action" = "down" ]
         then
-          cp $config_file $config_storage_location
-        elif [ "$action" = "up" ] && [ -f "$config_storage_location" ]
+          cp $config_file_ovs $config_storage_location_ovs
+        elif [ "$action" = "up" ] && [ -f "$config_storage_location_ovs" ]
         then
-          cp $config_storage_location $config_file
+          cp $config_storage_location_ovs $config_file_ovs
         fi
-        ifconfig $interface_name $action
-        if is_ovs_enable
+        if [ "$action" = "up" ]
         then
-          if [ -f "$config_file_ovs" ] && [ "$action" = "down" ]
-          then
-            cp $config_file_ovs $config_storage_location_ovs
-          elif [ "$action" = "up" ] && [ -f "$config_storage_location_ovs" ]
-          then
-            cp $config_storage_location_ovs $config_file_ovs
-          fi
-          if [ "$action" = "up" ]
-          then
-            ovs-vsctl add-br ovs_$interface_name
-            ovs-vsctl add-port ovs_$interface_name $interface_name
-            ifconfig ovs_$interface_name $action
-          fi
-          if [ "$action" = "down" ]
-          then
-            ifconfig ovs_$interface_name $action
-            ovs-vsctl del-br ovs_$interface_name
-          fi
+          ovs-vsctl add-br ovs_$interface_name
+          ovs-vsctl add-port ovs_$interface_name $interface_name
+          ifconfig ovs_$interface_name $action
         fi
-        if [ "$action" = "up" ] && [ -r "$config_file" ] && ! is_ovs_enable
+        if [ "$action" = "down" ]
         then
-          source $config_file
-          if [ "$BOOTPROTO" = "dhcp" ]
-          then
-            synonet --dhcp $interface_name
-          fi
-        fi
-        if [ "$action" = "up" ] && [ -r "$config_file_ovs" ] && is_ovs_enable
-        then
-          source $config_file_ovs
-          if [ "$BOOTPROTO" = "dhcp" ]
-          then
-            synonet --dhcp ovs_$interface_name
-          fi
+          ifconfig ovs_$interface_name $action
+          ovs-vsctl del-br ovs_$interface_name
         fi
       fi
+      if [ "$action" = "up" ] && [ -r "$config_file" ] && ! is_ovs_enable
+      then
+        source $config_file
+        if [ "$BOOTPROTO" = "dhcp" ]
+        then
+          synonet --dhcp $interface_name
+        fi
+      fi
+      if [ "$action" = "up" ] && [ -r "$config_file_ovs" ] && is_ovs_enable
+      then
+        source $config_file_ovs
+        if [ "$BOOTPROTO" = "dhcp" ]
+        then
+          synonet --dhcp ovs_$interface_name
+        fi
+      fi
+    fi
   done
 }
 
