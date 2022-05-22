@@ -1,6 +1,13 @@
 #!/bin/sh
 # Copyright (C) 2000-2017 Synology Inc. All rights reserved.
 
+set -eu
+
+script_root=`dirname $0`
+package_root=`realpath -m $0/../..`
+driver_name=`basename ${package_root}`
+driver_root="${SYNOPKG_PKGDEST:-${package_root}/target}/${driver_name}"
+
 is_ovs_enable ()
 {
     if [ ! -f  '/usr/syno/etc/synoovs/ovs_reg.conf' ]; then
@@ -18,8 +25,7 @@ is_ovs_enable ()
 set_interfaces()
 {
   action=$1
-  target_interface_name=$2
-  driver_name="aqc111"
+  target_interface_name=${2:-}
   for interface_name in $(ls /sys/class/net)
   do
     # Skip loopback/docker interface, since it doesn have a device/driver
@@ -37,14 +43,14 @@ set_interfaces()
 
     # For all other interfaces list the device driver folder and
     # bring interface up/down if the device driver folder links to
-    # something with aqc111 in its name.
+    # something with the target device driver in its name.
     driver_location=$(ls -ld /sys/class/net/$interface_name/device/driver)
-    interface_has_aqc111_driver=false
+    interface_has_target_driver=false
     if [ ! -z "$(echo "$driver_location" | grep $driver_name)" ]
     then
-      interface_has_aqc111_driver=true
+      interface_has_target_driver=true
     fi
-    if [ $interface_has_aqc111_driver = true ]
+    if [ $interface_has_target_driver = true ]
     then
       config_file=/etc/sysconfig/network-scripts/ifcfg-$interface_name
       config_file_ovs=/etc/sysconfig/network-scripts/ifcfg-ovs_$interface_name
@@ -108,11 +114,11 @@ case $1 in
 	start)
     initial_count=`count_usb_interfaces`
 
-		/sbin/insmod $SYNOPKG_PKGDEST/aqc111/mii.ko
-		/sbin/insmod $SYNOPKG_PKGDEST/aqc111/usbnet.ko
-		/sbin/insmod $SYNOPKG_PKGDEST/aqc111/aqc111.ko
+		test -e ${driver_root}/mii.ko    && /sbin/insmod ${driver_root}/mii.ko
+		test -e ${driver_root}/usbnet.ko && /sbin/insmod ${driver_root}/usbnet.ko
+		/sbin/insmod ${driver_root}/${driver_name}.ko
 
-    if [ -r /usr/lib/udev/rules.d/51-usb-aqc111-net.rules ]
+    if [ -r /usr/lib/udev/rules.d/51-usb-${driver_name}-net.rules ]
     then
       exit 0
     fi
@@ -131,13 +137,13 @@ case $1 in
 	;;
 	stop)
 		set_interfaces down
-		/sbin/rmmod $SYNOPKG_PKGDEST/aqc111/aqc111.ko
-		/sbin/rmmod $SYNOPKG_PKGDEST/aqc111/usbnet.ko
-		/sbin/rmmod $SYNOPKG_PKGDEST/aqc111/mii.ko
+		/sbin/rmmod ${driver_root}/${driver_name}.ko
+		test -e ${driver_root}/usbnet.ko && /sbin/rmmod ${driver_root}/usbnet.ko
+		test -e ${driver_root}/mii.ko    && /sbin/rmmod ${driver_root}/mii.ko
 		exit 0
 	;;
 	status)
-		/sbin/lsmod | grep aqc111 && exit 0 || exit 3
+		/sbin/lsmod | grep ${driver_name} && exit 0 || exit 3
 	;;
 	killall)
     exit 0
