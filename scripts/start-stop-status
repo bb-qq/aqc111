@@ -18,12 +18,19 @@ is_ovs_enable ()
 set_interfaces()
 {
   action=$1
+  target_interface_name=$2
   driver_name="aqc111"
   for interface_name in $(ls /sys/class/net)
   do
     # Skip loopback/docker interface, since it doesn have a device/driver
     # folder.
-    if [[ "$interface_name" = "lo" || "$interface_name" == "docker"* || "$interface_name" == "ovs"* || "$interface_name" == "syno"* || "$interface_name" == "sit"* ]]
+    if [[ "$interface_name" = "lo" || "$interface_name" == "docker"* || "$interface_name" == "ovs"* || "$interface_name" == "syno"* || "$interface_name" == "sit"* || "$interface_name" == "tap"* ]]
+    then
+      continue
+    fi
+
+    # Skip other interfaces if an interface was explicitly specified 
+    if [[ -n "$target_interface_name" && "$interface_name" != "$target_interface_name" ]]
     then
       continue
     fi
@@ -66,7 +73,7 @@ set_interfaces()
           ovs-vsctl add-port ovs_$interface_name $interface_name
           ifconfig ovs_$interface_name $action
         fi
-        if [ "$action" = "down" ]
+        if ifconfig ovs_$interface_name 2> /dev/null && [ "$action" = "down" ]
         then
           ifconfig ovs_$interface_name $action
           ovs-vsctl del-br ovs_$interface_name
@@ -105,6 +112,11 @@ case $1 in
 		/sbin/insmod $SYNOPKG_PKGDEST/aqc111/usbnet.ko
 		/sbin/insmod $SYNOPKG_PKGDEST/aqc111/aqc111.ko
 
+    if [ -r /usr/lib/udev/rules.d/51-usb-aqc111-net.rules ]
+    then
+      exit 0
+    fi
+
 		for i in `seq 1 60`
 		do
 			if [ `count_usb_interfaces` -ne $initial_count ]
@@ -128,9 +140,15 @@ case $1 in
 		/sbin/lsmod | grep aqc111 && exit 0 || exit 3
 	;;
 	killall)
-        ;;
+    exit 0
+  ;;
 	log)
 		exit 0
 	;;
+  reload)
+    set_interfaces down $2
+    set_interfaces up $2
+    exit 0
+  ;;
 esac
 

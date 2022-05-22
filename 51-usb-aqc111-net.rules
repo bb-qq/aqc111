@@ -1,0 +1,6 @@
+ACTION!="add", GOTO="usb_aqc111_net_end"
+SUBSYSTEM!="net", GOTO="usb_aqc111_net_end"
+
+ENV{PHYSDEVDRIVER}=="aqc111", RUN="/var/packages/aqc111/scripts/start-stop-status reload $env{INTERFACE}"
+
+LABEL="usb_aqc111_net_end"
