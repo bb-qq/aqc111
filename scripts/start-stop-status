@@ -54,8 +54,8 @@ set_interfaces()
     then
       config_file=/etc/sysconfig/network-scripts/ifcfg-$interface_name
       config_file_ovs=/etc/sysconfig/network-scripts/ifcfg-ovs_$interface_name
-      config_storage_location=$SYNOPKG_PKGDEST/ifcfg-$interface_name
-      config_storage_location_ovs=$SYNOPKG_PKGDEST/ifcfg-ovs_$interface_name
+      config_storage_location=$package_root/etc/ifcfg-$interface_name
+      config_storage_location_ovs=$package_root/etc/ifcfg-ovs_$interface_name
       if [ -f "$config_file" ] && [ "$action" = "down" ]
       then
         cp $config_file $config_storage_location
