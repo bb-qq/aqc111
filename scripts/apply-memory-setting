@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -eu
+
+target_value=524288
+current_value=`sysctl -n vm.min_free_kbytes`
+if [ "${current_value}" -lt "${target_value}" ]
+then
+    sysctl -w vm.min_free_kbytes=${target_value}
+fi

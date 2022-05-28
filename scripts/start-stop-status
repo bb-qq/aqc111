@@ -112,6 +112,8 @@ count_usb_interfaces()
 
 case $1 in
 	start)
+    test -e ${script_root}/apply-memory-setting && sh ${script_root}/apply-memory-setting
+
     initial_count=`count_usb_interfaces`
 
 		test -e ${driver_root}/mii.ko    && /sbin/insmod ${driver_root}/mii.ko
