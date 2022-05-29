@@ -101,6 +101,11 @@ set_interfaces()
           synonet --dhcp ovs_$interface_name
         fi
       fi
+
+      if [ "$action" = "up" ]
+      then
+        test -e ${script_root}/apply-private-flags && sh ${script_root}/apply-private-flags $interface_name
+      fi
     fi
   done
 }

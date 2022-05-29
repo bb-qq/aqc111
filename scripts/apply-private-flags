@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -eu
+
+SCRIPT=`realpath $0`
+ETCDIR=`realpath -m ${SCRIPT}/../../etc`
+
+# flag storage
+FLAG_FILE_LOWPOWER="${ETCDIR}/flag-low_power_5g"
+FLAG_FILE_THERMALTHROTTLING="${ETCDIR}/flag-thermal_throttling"
+
+# default value
+FLAG_DEFAULT_LOWPOWER="on"
+FLAG_DEFAULT_THERMALTHROTTLING="on"
+
+DEVNAME=${1:-}
+
+function process_config() {
+    FLAG_NAME=$1
+    FLAG_FILE=$2
+    FLAG_CURRENT=$3
+    FLAG_DEFAULT=$4
+
+    if [ -e "${FLAG_FILE}" ]
+    then
+        FLAG_CONFIG=`cat ${FLAG_FILE}`
+    else
+        FLAG_CONFIG=${FLAG_DEFAULT}
+        echo ${FLAG_CONFIG} > ${FLAG_FILE}
+    fi
+
+    if [ "${FLAG_CURRENT}" != "${FLAG_CONFIG}" ]
+    then
+        ethtool --set-priv-flags ${DEVNAME} "${FLAG_NAME}" "${FLAG_CONFIG}"
+    fi
+}
+
+if [ -z "${DEVNAME}" ]
+then
+    echo "$0 <ifname>"
+    exit 1
+fi
+
+ethtool --show-priv-flags ${DEVNAME} | {
+    while read FLAGLINE
+    do
+        FLAGVALUE=${FLAGLINE/#*: }
+        case "${FLAGLINE}" in
+            "Low Power 5G"*)
+                FLAG_CURRENT_LOWPOWER=${FLAGVALUE}
+                ;;
+            "Thermal throttling"*)
+                FLAG_CURRENT_THERMALTHROTTLING=${FLAGVALUE}
+                ;;
+        esac
+    done > /dev/null
+
+    process_config "Low Power 5G" \
+        "${FLAG_FILE_LOWPOWER}" "${FLAG_CURRENT_LOWPOWER}" "${FLAG_DEFAULT_LOWPOWER}"
+    process_config "Thermal throttling" \
+        "${FLAG_FILE_THERMALTHROTTLING}" "${FLAG_CURRENT_THERMALTHROTTLING}" "${FLAG_DEFAULT_THERMALTHROTTLING}"
+}
+
+ethtool --show-priv-flags ${DEVNAME}
