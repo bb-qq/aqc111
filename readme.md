@@ -25,6 +25,7 @@ Currently I only confirmed QNAP QNA-UC5G1T works. If you got other products and 
 
 * [QNAP QNA-UC5G1T](https://amzn.to/2A2aI1e) (Type-A, confirmed working)
 * [TRENDnet TUC-ET5G](https://amzn.to/314DASp) (Type-C)
+* [SABRENT NT-SS5G](https://amzn.to/3boi3OL) (Detachable Type-C/Type-a confirmed working)
 
 ## How to install
 
