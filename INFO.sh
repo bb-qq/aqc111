@@ -4,7 +4,7 @@
 source /pkgscripts-ng/include/pkg_util.sh
 
 package="aqc111"
-version="1.3.3.0-6"
+version="1.3.3.0-7"
 displayname="AQC111 driver"
 maintainer="bb-qq"
 arch="$(pkg_get_platform)"
