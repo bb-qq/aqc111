@@ -4,7 +4,7 @@ This is a AQC111U driver package for Synology NASes.
 
 ## Supported NAS platform
 
-* DSM 6.2
+* DSM 7.x
 * apollolake based products
     * DS918+ (confirmed working)
     * DS620slim
