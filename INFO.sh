@@ -15,7 +15,11 @@ thirdparty="yes"
 
 PRODUCT_VERSION_WITHOUT_MICRO=`echo ${PRODUCT_VERSION} | sed -E 's/^([0-9]+\.[0-9]+).+$/\1/'`
 if [ 1 -eq $(echo "${PRODUCT_VERSION_WITHOUT_MICRO} >= 7.0" | bc) ]; then
-    os_min_ver="7.0-40000"
+    if [ 1 -eq $(echo "${PRODUCT_VERSION_WITHOUT_MICRO} >= 7.2" | bc) ]; then
+        os_min_ver="7.2-64213"
+    else
+        os_min_ver="7.0-40000"
+    fi
     RUN_AS="package"
     INSTRUCTION=' [DSM7 note] If this is the first time you are installing this driver, special steps are required. See the readme for details.'
 else
